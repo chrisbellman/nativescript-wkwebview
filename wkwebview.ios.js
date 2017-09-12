@@ -14,9 +14,9 @@ var WKNavigationDelegateImpl = (function (_super) {
         handler._owner = owner;
         return handler;
     };
+    WKNavigationDelegateImpl.ObjCProtocols = [WKNavigationDelegate];
     return WKNavigationDelegateImpl;
 }(NSObject));
-WKNavigationDelegateImpl.ObjCProtocols = [WKNavigationDelegate];
 var WKScriptMessageHandlerImpl = (function (_super) {
     __extends(WKScriptMessageHandlerImpl, _super);
     function WKScriptMessageHandlerImpl() {
@@ -36,9 +36,9 @@ var WKScriptMessageHandlerImpl = (function (_super) {
             SUBJECTS[message.name].next(message.body);
         }
     };
+    WKScriptMessageHandlerImpl.ObjCProtocols = [WKScriptMessageHandler];
     return WKScriptMessageHandlerImpl;
 }(NSObject));
-WKScriptMessageHandlerImpl.ObjCProtocols = [WKScriptMessageHandler];
 var NSWKWebView = (function (_super) {
     __extends(NSWKWebView, _super);
     function NSWKWebView() {
@@ -60,9 +60,11 @@ var NSWKWebView = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    NSWKWebView.prototype.createNativeView = function () {
+        return this._ios;
+    };
     NSWKWebView.prototype.onLoaded = function () {
         _super.prototype.onLoaded.call(this);
-        console.log('onLoaded');
     };
     NSWKWebView.prototype.onUnloaded = function () {
         this._ios.navigationDelegate = null;
@@ -73,17 +75,14 @@ var NSWKWebView = (function (_super) {
             url = fs.path.join(fs.knownFolders.currentApp().path, url.replace('~/', ''));
             var myURL = NSURL.fileURLWithPath(url);
             this._ios.loadFileURLAllowingReadAccessToURL(myURL, myURL);
-            console.log('fileURLWithPath');
         }
         else {
             var myURL = NSURL.URLWithString(url);
             var myRequest = NSURLRequest.requestWithURL(myURL);
             this._ios.loadRequest(myRequest);
-            console.log('requestWithURL');
         }
     };
     NSWKWebView.prototype.reload = function () {
-        console.log('reload');
         return this._ios.reload();
     };
     NSWKWebView.prototype.addMessageHandler = function (messageHandlerName) {

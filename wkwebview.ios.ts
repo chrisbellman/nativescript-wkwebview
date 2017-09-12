@@ -62,6 +62,10 @@ export class NSWKWebView extends View {
         this._ios.navigationDelegate = WKNavigationDelegateImpl.initWithOwner(new WeakRef(this));
     }
 
+    createNativeView(): WKWebView {
+        return this._ios;
+    }
+
     onLoaded(): void {
         super.onLoaded();
     }
